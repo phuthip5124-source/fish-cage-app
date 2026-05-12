@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ผังกระชังปลากะพง</title>
+
+<style>
+
+body{
+    margin:0;
+    padding:20px;
+    font-family:Arial,sans-serif;
+    background:#f2f5f7;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:40px;
+    color:#123;
+}
+
+.row-title{
+    font-size:28px;
+    font-weight:bold;
+    margin:30px 0 15px;
+    color:#222;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:15px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:15px;
+    text-align:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+    transition:0.2s;
+    border-top:10px solid #999;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.cage{
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.feed{
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.small{
+    font-size:15px;
+    margin:4px 0;
+}
+
+/* สีเบอร์อาหาร */
+
+.f903{
+    border-color:#ffd966;
+}
+
+.f904{
+    border-color:#93c47d;
+}
+
+.f905{
+    border-color:#6fa8dc;
+}
+
+.f906{
+    border-color:#3d85c6;
+}
+
+.f907{
+    border-color:#f6b26b;
+}
+
+.f908{
+    border-color:#e06666;
+}
+
+/* มือถือ */
+
+@media(max-width:900px){
+
+.grid{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.cage{
+    font-size:22px;
+}
+
+.feed{
+    font-size:18px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>ผังกระชังปลากะพง</h1>
+
+<div class="row-title">แถว A</div>
+<div id="rowA" class="grid"></div>
+
+<div class="row-title">แถว B</div>
+<div id="rowB" class="grid"></div>
+
+<script>
+
+const API_URL = "https://sheetdb.io/api/v1/dneoexckxvp9u";
+
+fetch(API_URL)
+.then(response => response.json())
+.then(data => {
+
+    showData(data);
+
+});
+
+function showData(data){
+
+    const rowA = document.getElementById("rowA");
+    const rowB = document.getElementById("rowB");
+
+    data.forEach(item => {
+
+        const cage = item["กระชัง"];
+        const feedNo = item["เบอร์อาหาร"];
+        const food = item["อาหาร/วัน (kg)"];
+        const avgWeight = item["น้ำหนักเฉลี่ยปลา (kg)"];
+        const totalWeight = item["น้ำหนักปลารวม (kg)"];
+        const fishCount = item["จำนวนปลา (ตัว)"];
+
+        const card = document.createElement("div");
+
+        card.className = "card f" + feedNo;
+
+        card.innerHTML = `
+
+            <div class="cage">${cage}</div>
+
+            <div class="feed">
+                อาหาร ${feedNo || "-"}
+            </div>
+
+            <div class="small">
+                อาหาร/วัน : ${food || "-"} kg
+            </div>
+
+            <div class="small">
+                น้ำหนักเฉลี่ย : ${avgWeight || "-"} kg
+            </div>
+
+            <div class="small">
+                น้ำหนักรวม : ${totalWeight || "-"} kg
+            </div>
+
+            <div class="small">
+                จำนวนปลา : ${fishCount || "-"} ตัว
+            </div>
+
+        `;
+
+        if(String(cage).startsWith("A")){
+
+            rowA.appendChild(card);
+
+        }
+
+        else if(String(cage).startsWith("B")){
+
+            rowB.appendChild(card);
+
+        }
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
